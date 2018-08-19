@@ -15,7 +15,7 @@ export class ShoppingListComponent implements OnInit {
   constructor(private shoppingListService: ShoppingListService) {
     this.shoppingListService.ingredientAddedEvent.subscribe(
       (ingredients: Ingredient[]) => {
-        console.log('ingredients: '+ingredients);
+        console.log('ingredients: ' + ingredients);
         this.ingredients = ingredients;
       }
     )
@@ -25,4 +25,7 @@ export class ShoppingListComponent implements OnInit {
     this.ingredients = this.shoppingListService.getIngredients();
   }
 
+  onEditItem(index: number) {
+    this.shoppingListService.startEditing.next(index);
+  }
 }

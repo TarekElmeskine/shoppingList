@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params} from "@angular/router";
 import {RecipeService} from "../recipe.service";
 import {Recipe} from "../recipe.model";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-recipe-edit',
@@ -12,6 +13,8 @@ export class RecipeEditComponent implements OnInit {
 
   recipe: Recipe;
   editMode = false;
+  @ViewChild('f')
+  formSubmit: NgForm;
 
   constructor(private recipeService: RecipeService, private route: ActivatedRoute) {
   }
@@ -25,4 +28,12 @@ export class RecipeEditComponent implements OnInit {
     );
   }
 
+  onSubmit() {
+    const id = this.route.snapshot.params['id'];
+    console.log('the id: '+id);
+    if (id != null) {
+      this.recipeService.removeRecipe(id);
+    }
+    this.recipeService.addRecipe(this.recipe);
+  }
 }
