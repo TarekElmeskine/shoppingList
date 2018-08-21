@@ -1,8 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
-import {RecipeService} from "../recipe.service";
-import {Recipe} from "../recipe.model";
-import {NgForm} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Params} from '@angular/router';
+import {RecipeService} from '../recipe.service';
+import {Recipe} from '../recipe.model';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -11,10 +11,10 @@ import {NgForm} from "@angular/forms";
 })
 export class RecipeEditComponent implements OnInit {
 
+  id: number;
   recipe: Recipe;
   editMode = false;
-  @ViewChild('f')
-  formSubmit: NgForm;
+  recipeForm: FormGroup;
 
   constructor(private recipeService: RecipeService, private route: ActivatedRoute) {
   }
@@ -22,15 +22,35 @@ export class RecipeEditComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
-        this.recipe = this.recipeService.getRecipe(+params['id']);
-        this.editMode = params['id'] != null
+        this.id = +params['id']
+        this.editMode = this.id != null;
+        this.initForm();
       }
     );
   }
 
+  private initForm() {
+    let recipeName = '';
+    let recipeImagePath = '';
+    let recipeDescription = '';
+
+    if(this.editMode){
+      const recipe = this.recipeService.getRecipe(this.id);
+      recipeName = recipe.name;
+      recipeImagePath = recipe.imagePath;
+      recipeDescription = recipe.description;
+    }
+
+    this.recipeForm = new FormGroup({
+      'name': new FormControl(recipeName),
+      'imagePath': new FormControl(recipeImagePath),
+      'description': new FormControl(recipeDescription)
+    });
+  }
+
   onSubmit() {
     const id = this.route.snapshot.params['id'];
-    console.log('the id: '+id);
+    console.log('the id: ' + id);
     if (id != null) {
       this.recipeService.removeRecipe(id);
     }
