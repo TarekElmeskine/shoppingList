@@ -10,7 +10,6 @@ import {RecipeService} from "../recipe.service";
 export class RecipeListComponent implements OnInit {
 
   recipes : Recipe[];
-  newRecipe : Recipe;
 
   constructor(private recipeService: RecipeService) {
   }
@@ -19,7 +18,6 @@ export class RecipeListComponent implements OnInit {
     this.recipes = this.recipeService.getRecipes();
   }
 
-  onNewRecipe(){
-  }
+
 
 }

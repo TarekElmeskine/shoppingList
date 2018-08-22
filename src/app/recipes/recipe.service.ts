@@ -43,8 +43,11 @@ export class RecipeService {
   }
 
   addRecipe(recipe: Recipe) {
-    recipe.id = this.recipes.length + 1;
     this.recipes.push(recipe);
+  }
+
+  updateRecipe(index: number, newRecipe: Recipe){
+    this.recipes[index] = newRecipe;
   }
 
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
