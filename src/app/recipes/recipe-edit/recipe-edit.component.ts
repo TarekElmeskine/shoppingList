@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {RecipeService} from '../recipe.service';
-import {Recipe} from '../recipe.model';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -15,14 +14,14 @@ export class RecipeEditComponent implements OnInit {
   editMode = false;
   recipeForm: FormGroup;
 
-  constructor(private recipeService: RecipeService, private route: ActivatedRoute) {
+  constructor(private recipeService: RecipeService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
         this.id = +params['id'];
-        this.editMode = this.id != null;
+        this.editMode = params['id']!= null;
         this.initForm();
       }
     );
@@ -44,7 +43,10 @@ export class RecipeEditComponent implements OnInit {
           recipeIngredients.push(
             new FormGroup({
               'name': new FormControl(ingredient.name, Validators.required),
-              'amount': new FormControl(ingredient.amount, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
+              'amount': new FormControl(ingredient.amount, [
+                Validators.required,
+                Validators.pattern(/^[1-9]+[0-9]*$/)
+              ])
             })
           );
         }
@@ -60,14 +62,16 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onSubmit() {
- /*   const newRecipe = new Recipe(this.recipeForm.value['name'],
-      this.recipeForm.value['description'],
-      this.recipeForm.value['imagePath'],
-      this.recipeForm.value['ingredients']);*/
+    /*   const newRecipe = new Recipe(this.recipeForm.value['name'],
+         this.recipeForm.value['description'],
+         this.recipeForm.value['imagePath'],
+         this.recipeForm.value['ingredients']);*/
     if (this.editMode) {
       this.recipeService.updateRecipe(this.id, this.recipeForm.value);
+    } else {
+      this.recipeService.addRecipe(this.recipeForm.value);
     }
-    this.recipeService.addRecipe(this.recipeForm.value);
+    this.onCancel();
   }
 
   onAddIngredient() {
@@ -75,5 +79,9 @@ export class RecipeEditComponent implements OnInit {
       'name': new FormControl(null, Validators.required),
       'amount': new FormControl(null, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
     }));
+  }
+
+  onCancel(){
+    this.router.navigate(['../'], {relativeTo: this.route})
   }
 }
