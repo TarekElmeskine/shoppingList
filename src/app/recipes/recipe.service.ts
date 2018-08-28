@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Ingredient} from '../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list/shopping-list.service';
 import {Subject} from 'rxjs';
+import {DataStorageService} from '../shared/data-storage.service';
 
 @Injectable()
 export class RecipeService {
@@ -27,7 +28,14 @@ export class RecipeService {
   }
 
   getRecipes() {
-    return this.recipes.slice();
+   /* this.dataStorageService.fetchRecipes()
+      .subscribe(
+        (recipes: Recipe[]) => {
+          this.recipes = recipes;
+        }
+      );
+    return this.setRecipes(this.recipes);*/
+    this.recipes.slice()
   }
 
   getRecipe(index: number) {
@@ -35,7 +43,7 @@ export class RecipeService {
   }
 
   removeRecipe(index: number) {
-    this.recipes.splice(index, 1)
+    this.recipes.splice(index, 1);
     this.recipesChanged.next(this.recipes.slice());
   }
 
