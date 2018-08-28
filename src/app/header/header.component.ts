@@ -1,7 +1,8 @@
 import {Component} from '@angular/core';
 import {RecipeService} from "../recipes/recipe.service";
-import {ServerService} from "../shared/data-storage.service";
+import {DataStorageService} from '../shared/data-storage.service';
 import {Recipe} from "../recipes/recipe.model";
+import {Response} from '@angular/http';
 
 @Component({
   selector: 'app-header',
@@ -9,11 +10,11 @@ import {Recipe} from "../recipes/recipe.model";
 })
 export class HeaderComponent {
 
-  constructor(private recipeService: RecipeService, private serverService: ServerService) {
+  constructor(private recipeService: RecipeService, private dataStorageService: DataStorageService) {
   }
 
   onSave() {
-    this.serverService.saveRecipes(this.recipeService.getRecipes())
+    this.dataStorageService.saveRecipes()
       .subscribe(
         (response: Response) => {
           console.log(response);
@@ -22,7 +23,7 @@ export class HeaderComponent {
   }
 
   onGet() {
-    this.serverService.fetchRecipes()
+    this.dataStorageService.fetchRecipes()
       .subscribe(
         (recipes: Recipe[]) => {
           console.log(recipes);

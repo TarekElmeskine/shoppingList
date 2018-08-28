@@ -1,20 +1,30 @@
-import {Injectable} from "@angular/core";
-import {Http} from "@angular/http";
-import {Recipe} from "../recipes/recipe.model";
+import {Injectable} from '@angular/core';
+import {Http, Response} from '@angular/http';
+import 'rxjs/add/operator/map';
+import {RecipeService} from '../recipes/recipe.service';
+import {Recipe} from '../recipes/recipe.model';
 
 
 @Injectable()
-export class ServerService{
-  constructor(private http: Http){}
-
-  saveRecipes(recipes: Recipe []){
-    return this.http.put('https://ng-recipe-book-e0b6f.firebaseio.com/data.json', recipes);
+export class DataStorageService {
+  constructor(private http: Http, private recipeService: RecipeService) {
   }
-  fetchRecipes(){
-    return this.http.get('https://ng-recipe-book-e0b6f.firebaseio.com/data.json')
+
+  saveRecipes() {
+    return this.http.put('https://ng-recipe-book-e0b6f.firebaseio.com/recipes.json', this.recipeService.getRecipes());
+  }
+
+  fetchRecipes() {
+    return this.http.get('https://ng-recipe-book-e0b6f.firebaseio.com/recipes.json')
       .map(
         (response: Response) => {
-          return response.json();
+          const recipes: Recipe[] = response.json();
+          for (let recipe of recipes) {
+            if (!recipe['ingredients']) {
+              recipe['ingredients'] = [];
+            }
+          }
+          return recipes;
         }
       );
   }
