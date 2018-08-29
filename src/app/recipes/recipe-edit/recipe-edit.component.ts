@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {RecipeService} from '../recipe.service';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -13,6 +13,7 @@ export class RecipeEditComponent implements OnInit {
   id: number;
   editMode = false;
   recipeForm: FormGroup;
+  ingredientControls: AbstractControl[] = [];
 
   constructor(private recipeService: RecipeService, private route: ActivatedRoute, private router: Router) {
   }
@@ -59,6 +60,7 @@ export class RecipeEditComponent implements OnInit {
       'description': new FormControl(recipeDescription, Validators.required),
       'ingredients': recipeIngredients
     });
+    this.ingredientControls = recipeIngredients.controls;
   }
 
   onSubmit() {

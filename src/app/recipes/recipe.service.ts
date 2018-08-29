@@ -27,7 +27,7 @@ export class RecipeService {
   constructor(private shoppingListService: ShoppingListService) {
   }
 
-  getRecipes() {
+  getRecipes():Recipe[] {
    /* this.dataStorageService.fetchRecipes()
       .subscribe(
         (recipes: Recipe[]) => {
@@ -35,7 +35,7 @@ export class RecipeService {
         }
       );
     return this.setRecipes(this.recipes);*/
-    this.recipes.slice()
+    return this.recipes.slice()
   }
 
   getRecipe(index: number) {
